@@ -21,6 +21,11 @@ const NavBar = () => {
         </li>
         {user ? (
           <div className='flex space-x-3'>
+            <li>
+              <Link href='/cart'>
+                <a href=''>Cart</a>
+              </Link>
+            </li>
             <li>{user.name}</li>
             <li>
               <button onClick={handleSignOut}>Sign Out</button>

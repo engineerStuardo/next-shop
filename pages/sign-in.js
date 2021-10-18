@@ -1,18 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
+
 import Button from '../components/Button'
 import Field from '../components/Field'
 import Input from '../components/input'
 import Page from '../components/Page'
-import { signIn } from '../lib/api/sign-in'
+import { useSignIn } from '../hooks/user'
 
 const SignIn = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const router = useRouter()
+
+  const { isError, isLoading, signIn } = useSignIn()
 
   const handleSubmit = async e => {
     e.preventDefault()
-    const res = await signIn({ email, password })
-    console.log(res)
+    const valid = await signIn(email, password)
+    valid && router.push('/')
   }
 
   return (
@@ -34,7 +39,12 @@ const SignIn = () => {
             onChange={e => setPassword(e.target.value)}
           />
         </Field>
-        <Button type='submit'> Sign In</Button>
+        {isError && <p className='mt-3 text-red-600'>Invalid Cretentials</p>}
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <Button type='submit'> Sign In</Button>
+        )}
       </form>
     </Page>
   )
